@@ -1,0 +1,15 @@
+# env file
+/env/
+
+
+# Project Database 
+/mmnotes/db.sqlite3
+/mmnotes/templates/
+/mmnotes/webapp/static/
+
+
+
+# Project static file
+*.css
+*.html
+*.sqlite3
