@@ -49,3 +49,6 @@ def logout_view(request):
 @login_required
 def home_view(request):
     return render(request, "accounts/home.html", {})
+
+def template(request):
+    return render(request, "accounts/template.html", {'value':1})
