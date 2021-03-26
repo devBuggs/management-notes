@@ -3,9 +3,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, get_user_model, login, logout
 
-from .forms import UserLoginForm, UserRegisterForm
-# Create your views here.
+# import models here
+from django.contrib.auth.models import User
+from accounts.models import UserSubscription
 
+# import forms here
+from .forms import UserLoginForm, UserRegisterForm
+
+
+
+
+# Create your views here.
 def login_view(request):
     next = request.GET.get('next')
     form = UserLoginForm(request.POST or None)
@@ -61,9 +69,13 @@ def home_view(request):
 
 @login_required
 def profile_view(request):
+    currentUser = request.user
+    access = UserSubscription.objects.get(username=currentUser.id)
+    accessType = access.subscription_details
     context = {
         'layout': 0,
         'footer': 1,
+        'accessType': accessType,
     }
     return render(request, "accounts/profile.html", context)
 
