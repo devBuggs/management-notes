@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, get_user_model, login, logout
 
@@ -53,10 +54,18 @@ def logout_view(request):
 @login_required
 def home_view(request):
     context = {
+        'layout': 1,
+        'footer': 0,
+    }
+    return render(request, "accounts/home.html", context)
+
+@login_required
+def profile_view(request):
+    context = {
         'layout': 0,
         'footer': 1,
     }
-    return render(request, "accounts/home.html", context)
+    return render(request, "accounts/profile.html", context)
 
 def template(request):
     return render(request, "accounts/template.html", {'value':1})
