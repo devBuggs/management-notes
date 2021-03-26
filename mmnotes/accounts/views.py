@@ -19,6 +19,8 @@ def login_view(request):
         return redirect(home_view)
     context = {
         'form':form,
+        'layout': 1,
+        'footer': 0,
     }
     return render(request, 'accounts/login.html', context)
 
@@ -38,6 +40,8 @@ def register_view(request):
         return redirect(home_view)
     context = {
         'form':form,
+        'layout': 1,
+        'footer': 0,
     }
     return render(request, "accounts/signup.html", context)
 
@@ -48,7 +52,14 @@ def logout_view(request):
 
 @login_required
 def home_view(request):
-    return render(request, "accounts/home.html", {})
+    context = {
+        'layout': 0,
+        'footer': 1,
+    }
+    return render(request, "accounts/home.html", context)
 
 def template(request):
     return render(request, "accounts/template.html", {'value':1})
+
+def mainTemp(request):
+    return render(request, "accounts/main.html", {'footer':1, 'layout':0, })
