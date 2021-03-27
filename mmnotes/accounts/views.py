@@ -5,12 +5,14 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 
 # import models here
 from django.contrib.auth.models import User
-from accounts.models import UserSubscription
+from accounts.models import UserSubscription, SubscriptionPack, Course
 
 # import forms here
 from .forms import UserLoginForm, UserRegisterForm
 
-
+# SubscriptionPack Instance
+default_pack = SubscriptionPack.objects.get(id=1)
+default_access = Course.objects.get(id=2)
 
 
 # Create your views here.
@@ -41,6 +43,9 @@ def register_view(request):
         password = form.cleaned_data.get('password')
         user.set_password(password)
         user.save()
+        #Subscription details of correspondance user
+        userSub = UserSubscription(username=user, subscription_details=default_pack, subject_details=default_access)
+        userSub.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
         if next:

@@ -16,7 +16,7 @@ class SubscriptionPack(models.Model):
         return self.subscription
 
 class UserSubscription(models.Model):
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
     subscription_details = models.OneToOneField(SubscriptionPack, on_delete=models.CASCADE)
     subject_details = models.OneToOneField(Course, on_delete=models.CASCADE)
     
