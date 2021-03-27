@@ -70,12 +70,14 @@ def home_view(request):
 @login_required
 def profile_view(request):
     currentUser = request.user
-    access = UserSubscription.objects.get(username=currentUser.id)
-    accessType = access.subscription_details
+    subscription = UserSubscription.objects.get(username=currentUser.id)
+    accessType = subscription.subscription_details
+    subjectAccess = subscription.subject_details
     context = {
         'layout': 0,
         'footer': 1,
         'accessType': accessType,
+        'subject': subjectAccess,
     }
     return render(request, "accounts/profile.html", context)
 
