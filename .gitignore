@@ -8,6 +8,9 @@
 /mmnotes/webapp/static/
 
 
+# Project cache file
+*.pyc
+
 
 # Project static file
 *.css
