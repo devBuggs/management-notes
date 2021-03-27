@@ -46,7 +46,7 @@ def register_view(request):
         if next:
             return redirect(next)
         # Redirect to HOME-VIEW
-        return redirect(home_view)
+        return redirect(profile_view)
     context = {
         'form':form,
         'layout': 1,
