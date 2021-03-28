@@ -81,8 +81,8 @@ def profile_view(request):
     context = {
         'layout': 0,
         'footer': 1,
-        'accessType': accessType,
-        'subject': subjectAccess,
+        'accessType': str(accessType),
+        'subject': str(subjectAccess),
     }
     return render(request, "accounts/profile.html", context)
 
