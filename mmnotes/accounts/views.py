@@ -12,7 +12,7 @@ from .forms import UserLoginForm, UserRegisterForm
 
 # SubscriptionPack Instance
 default_pack = SubscriptionPack.objects.get(id=1)
-default_access = Course.objects.get(id=2)
+default_access = Course.objects.get(course="NoCourse")
 
 
 # Create your views here.
