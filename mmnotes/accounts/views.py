@@ -8,12 +8,11 @@ from django.contrib.auth.models import User
 from accounts.models import UserSubscription, SubscriptionPack, Course
 
 # import forms here
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm, EditUserProfileForm
 
 # SubscriptionPack Instance
 default_pack = SubscriptionPack.objects.get(id=1)
-default_access = Course.objects.get(course="NoCourse")
-
+default_access = Course.objects.get(id=2)
 
 # Create your views here.
 def login_view(request):
@@ -42,15 +41,14 @@ def register_view(request):
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')
         user.set_password(password)
-        user.save()
         #Subscription details of correspondance user
         userSub = UserSubscription(username=user, subscription_details=default_pack, subject_details=default_access)
+        user.save()
         userSub.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
         if next:
             return redirect(next)
-        # Redirect to HOME-VIEW
         return redirect(profile_view)
     context = {
         'form':form,
@@ -58,6 +56,29 @@ def register_view(request):
         'footer': 0,
     }
     return render(request, "accounts/signup.html", context)
+
+@login_required
+def editprofile_view(request):
+    form = EditUserProfileForm(request.POST or None)
+    if form.is_valid():
+        #form = form.save()
+        user = User.objects.get(id=request.user.id)
+        print("Printing User : ", user)
+        fname = form.cleaned_data.get('first_name')
+        lname = form.cleaned_data.get('last_name')
+        print("*************** fname : ", fname)
+        print("*************** lname : ", lname)
+        user.first_name = str(fname)
+        user.last_name = str(lname)
+        print("--------------- user.first_name : ", user.first_name)
+        print("--------------- user.last_name : ", user.last_name)
+        print("*************** assing fname = ", str(fname))
+        print("*************** assing lname = ", str(lname))
+        user.save()
+
+        return redirect(profile_view)
+    context = { 'form': form, }
+    return render(request, 'accounts/editprofile.html', context)
 
 def logout_view(request):
     logout(request)
@@ -85,9 +106,3 @@ def profile_view(request):
         'subject': str(subjectAccess),
     }
     return render(request, "accounts/profile.html", context)
-
-def template(request):
-    return render(request, "accounts/template.html", {'value':1})
-
-def mainTemp(request):
-    return render(request, "accounts/main.html", {'footer':1, 'layout':0, })
