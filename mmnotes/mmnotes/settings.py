@@ -56,6 +56,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mmnotes.urls'
 
+SESSION_COOKIE_AGE = 60 # one hour in seconds
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
