@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse 
 
 from accounts.models import UserSubscription
+from .models import CourseSemester, SemesterSubject, SubjectUnit
+
 
 # Create your views here.
 
@@ -12,12 +15,89 @@ def subject_view(request):
     subscription = UserSubscription.objects.get(username=currentUser.id)
     accessType = subscription.subscription_details
     subjectAccess = subscription.subject_details
+    semList = CourseSemester.objects.filter(course_name = subjectAccess).in_bulk()
+    print("===================== sem List", semList, "--------------- type :", type(semList))
+    print("-------------- ", semList.values())
+    context = {
+        'layout': 1,
+        'footer': 0,
+        'navType': 'semester',
+        'accessType': str(accessType),
+        'subject': str(subjectAccess),
+        'navlink': semList.values(),
+    }
+    return render(request, "course/main.html", context)
+
+'''
+@login_required
+def data_view(request, semester_code):
+    currentUser = request.user
+    subscription = UserSubscription.objects.get(username=currentUser.id)
+    accessType = subscription.subscription_details
+    subjectAccess = subscription.subject_details
+    
+    if semester_code:
+        subjectList = SemesterSubject.objects.filter(semester_code = semester_code).in_bulk()
+        print("===================== subject List", subjectList, "--------------- type :", type(subjectList))
+        print("-------------- ", subjectList.values())
+        navigationCode = subjectList.values()
+    elif subject_code:
+        unitList = SubjectUnit.objects.filter(subject_code = subject_code).in_bulk()
+        print("===================== subject List", unitList, "--------------- type :", type(unitList))
+        print("-------------- ", unitList.values())
+        navigationCode = unitList.values()
+    else:
+        semList = CourseSemester.objects.filter(course_name = subjectAccess).in_bulk()
+        print("===================== sem List", semList, "--------------- type :", type(semList))
+        print("-------------- ", semList.values())
+        navigationCode = semList.values()
     context = {
         'layout': 1,
         'footer': 0,
         'accessType': str(accessType),
         'subject': str(subjectAccess),
-        #'navlink': subjectlink,
+        'navlink': navigationCode,
+    }
+    return render(request, "course/main.html", context)
+'''
+def sub_view(request, semester_code):
+    currentUser = request.user
+    subscription = UserSubscription.objects.get(username=currentUser.id)
+    accessType = subscription.subscription_details
+    subjectAccess = subscription.subject_details
+    semInfo = CourseSemester.objects.get(semester_code= semester_code)
+    subjectList = SemesterSubject.objects.filter(semester_code = semInfo).in_bulk()
+    print("===================== subject List", subjectList, "--------------- type :", type(subjectList))
+    print("-------------- ", subjectList.values())
+    context = {
+        'layout': 1,
+        'footer': 0,
+        'navType': 'subject',
+        'accessType': str(accessType),
+        'subject': str(subjectAccess),
+        'navlink': subjectList.values(),
     }
     return render(request, "course/main.html", context)
 
+def unit_view(request, semester_code, subject_code):
+    currentUser = request.user
+    subscription = UserSubscription.objects.get(username=currentUser.id)
+    accessType = subscription.subscription_details
+    subjectAccess = subscription.subject_details
+    semInfo = CourseSemester.objects.get(semester_code= semester_code)
+    subInfo = SemesterSubject.objects.get(subject_code= subject_code)
+    unitList = SubjectUnit.objects.filter(subject_code = subInfo).in_bulk()
+    print("===================== unit List", unitList, "--------------- type :", type(unitList))
+    print("-------------- ", unitList.values())
+    context = {
+        'layout': 1,
+        'footer': 0,
+        'navType': 'unit',
+        'accessType': str(accessType),
+        'subject': str(subjectAccess),
+        'navlink': unitList.values(),
+    }
+    return render(request, "course/main.html", context)
+
+def data_view(request, unit_code):
+    return HttpResponse("You're looking at the Content of %s", unit_code)
