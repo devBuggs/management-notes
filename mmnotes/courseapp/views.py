@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse 
 from django.template import loader
 
-
 from accounts.models import UserSubscription
 from .models import CourseSemester, SemesterSubject, SubjectUnit
 
@@ -29,6 +28,7 @@ def subject_view(request):
     }
     return render(request, "course/main.html", context)
 
+@login_required
 def sub_view(request, semester_code):
     currentUser = request.user
     subscription = UserSubscription.objects.get(username=currentUser.id)
@@ -48,6 +48,7 @@ def sub_view(request, semester_code):
     }
     return render(request, "course/main.html", context)
 
+@login_required
 def unit_view(request, semester_code, subject_code):
     currentUser = request.user
     subscription = UserSubscription.objects.get(username=currentUser.id)
@@ -68,6 +69,7 @@ def unit_view(request, semester_code, subject_code):
     }
     return render(request, "course/main.html", context)
 
+@login_required
 def data_view(request, semester_code, subject_code, unit_code):
     semID = semester_code
     subCode = subject_code
