@@ -10,6 +10,7 @@ from accounts.models import UserSubscription, SubscriptionPack, Course
 # import forms here
 from .forms import UserLoginForm, UserRegisterForm, EditUserProfileForm
 
+
 # SubscriptionPack Instance
 default_pack = SubscriptionPack.objects.get(id=1)
 default_access = Course.objects.get(id=2)
@@ -26,7 +27,7 @@ def login_view(request):
         if next:
             return redirect(next)
         # Redirect to HOME-VIEW
-        return redirect(home_view)
+        return redirect(profile_view)
     context = {
         'form':form,
         'layout': 1,
@@ -84,14 +85,6 @@ def logout_view(request):
     logout(request)
     # Redirect to User-Login-Page
     return redirect('/')
-
-@login_required
-def home_view(request):
-    context = {
-        'layout': 1,
-        'footer': 0,
-    }
-    return render(request, "accounts/home.html", context)
 
 @login_required
 def profile_view(request):

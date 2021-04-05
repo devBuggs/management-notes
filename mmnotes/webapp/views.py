@@ -9,6 +9,8 @@ from .forms import contact_form
 
 # Create your views here.
 def index(request):
+    if request.method == 'POST':
+        return HttpResponse("Search is under construction. ECORPIN CORP")
     return render(request, 'web/index.html', context=None)
 
 
@@ -24,3 +26,11 @@ def contact_view(request):
         form = contact_form()
     context = { 'form':form }
     return render(request, 'web/contact.html', context)
+
+
+def search_view(request):
+    if request.method == 'POST':
+        #searchValue = request.search_keyword
+        #print("-------------------------------------------------", search_keyword)
+        return HttpResponse("Search is under construction.")
+    return HttpResponse("Search is under construction.")
