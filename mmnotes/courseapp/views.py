@@ -67,6 +67,7 @@ def unit_view(request, semester_code, subject_code):
         'accessType': str(accessType),
         'subject': str(subjectAccess),
         'navlink': unitList.values(),
+        'semester_code': semester_code,
     }
     return render(request, "course/main.html", context)
 
@@ -96,6 +97,7 @@ def data_view(request, semester_code, subject_code, unit_code):
         'accessType': str(accessType),
         'subject': str(subjectAccess),
         'navlink': unitList.values(),
+        'semester_code': semester_code,
     }
     return HttpResponse(template.render(context, request))
 

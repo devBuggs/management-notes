@@ -9,6 +9,7 @@ urlpatterns = [
     path('<slug:semester_code>/', sub_view, name='sem'),
     path('<slug:semester_code>/<slug:subject_code>/', unit_view, name='sub'),
     
+
     path('<slug:subject_code>/<slug:unit_code>/', data_view, name='unit'),
-    path('<slug:semester_code>/<slug:subject_code>/<slug:unit_code>/', data_view),
+    path('<slug:semester_code>/<slug:subject_code>/<slug:unit_code>/', data_view, name='unitid'),
 ]
