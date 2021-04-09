@@ -30,3 +30,10 @@ class UserSubscription(models.Model):
     subscription_details = models.ForeignKey(SubscriptionPack, on_delete=models.CASCADE)
     subject_details = models.ForeignKey(Course, on_delete=models.CASCADE)
     
+
+class UserContact(models.Model):
+    username = models.CharField(max_length=150)
+    contact_number = models.CharField(max_length=13)
+
+    def __str__(self):
+        return self.contact_number

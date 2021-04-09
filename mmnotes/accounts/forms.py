@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth import (authenticate, get_user_model)
 
+from .models import UserContact
+
+
 User = get_user_model()
 
 #UserLoginForm
@@ -49,9 +52,6 @@ class UserRegisterForm(forms.ModelForm):
         return super(UserRegisterForm, self).clean(*args, *kwargs)
 
 class EditUserProfileForm(forms.ModelForm):
-    #f_name = forms.CharField(max_length=50)
-    #l_name = forms.CharField(max_length=50)
-
     class Meta:
         model = User
         fields = [
@@ -63,3 +63,16 @@ class EditUserProfileForm(forms.ModelForm):
         first_name = self.cleaned_data.get('first_name')
         last_name = self.cleaned_data.get('last_name')
         return super(EditUserProfileForm, self).clean(*args, **kwargs)
+
+class EditContactForm(forms.ModelForm):
+    class Meta:
+        model = UserContact
+        fields = [
+            'username',
+            'contact_number',
+        ]
+
+    def clean(self, *args, **kwargs):
+        username = self.cleaned_data.get('username')
+        contact_number = self.cleaned_data.get('contact_number')
+        return super(EditContactForm, self).clean(*args, **kwargs)    
