@@ -140,13 +140,13 @@ def profile_view(request):
 @login_required
 def payment_view(request):
     userName = str(request.user.username)
-    userContactInfo = UserContact.objects.filter(username=userName) # error occures here
-    orderId = str(request.user.first_name[0:2])+str(request.user.last_name[0:3])+str(os.urandom(6))
+    userContactInfo = UserContact.objects.get(username=userName).contact_number 
+    orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])+str(userContactInfo[4:9])
     orderAmount = '200'
     orderCurrency = 'INR'
     orderNote = 'Payment'
     customerName = request.user.first_name + request.user.last_name
-    customerPhone = str(userContactInfo.contact_number)
+    customerPhone = str(userContactInfo)
     customerEmail = request.user.email
     returnUrl = 'devbuggs.pythonanywhere.com'
     notifyUrl = 'devbuggs.pythonanywhere.com'
@@ -176,7 +176,7 @@ def payment_view(request):
     signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
 
     context = {
-        'layout': 1,
+        'layout': 0,
         'footer': 0,
         'payment': postData,
         'signature': signature,
