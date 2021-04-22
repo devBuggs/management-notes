@@ -15,9 +15,6 @@ from accounts.models import UserSubscription, SubscriptionPack, Course, UserCont
 # import forms here
 from .forms import UserLoginForm, UserRegisterForm, EditUserProfileForm, EditContactForm
 
-# Merchant Payment Integration Data
-appId = 'sedrftgyhujik'
-secretKey = 'edrftgyhujikol'
 
 
 # SubscriptionPack Instance
@@ -45,7 +42,6 @@ def login_view(request):
         'footer': 0,
     }
     return render(request, 'accounts/login.html', context)
-
 
 def register_view(request):
     next = request.GET.get('next')
@@ -115,12 +111,10 @@ def editContact_view(request):
     }
     return render(request, 'accounts/editcontact.html', context)
 
-
 def logout_view(request):
     logout(request)
     # Redirect to User-Login-Page
     return redirect('/')
-
 
 @login_required
 def profile_view(request):
@@ -136,7 +130,6 @@ def profile_view(request):
     }
     return render(request, "accounts/profile.html", context)
 
-
 @login_required
 def payment_view(request):
     userName = str(request.user.username)
@@ -150,8 +143,8 @@ def payment_view(request):
     customerEmail = request.user.email
     returnUrl = 'devbuggs.pythonanywhere.com'
     notifyUrl = 'devbuggs.pythonanywhere.com'
+
     postData = {
-        "appId" : appId,
         "orderId" : orderId,
         "orderAmount" : orderAmount,
         "orderCurrency" : orderCurrency,
@@ -163,23 +156,10 @@ def payment_view(request):
         "notifyUrl" : notifyUrl
     }
     
-    sortedKeys = sorted(postData)
-    signatureData = ""
-    for key in sortedKeys:
-        signatureData += key+postData[key]
-    
-    #message = bytes(signatureData).encode('utf-8')
-    message = bytes(signatureData, encoding='utf-8')
-    #get secret key from your config
-    #secret = bytes(secretKey).encode('utf-8')
-    secret = bytes(secretKey, encoding='utf-8')
-    signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
-
     context = {
         'layout': 0,
         'footer': 0,
-        'payment': postData,
-        'signature': signature,
+        'payment': postData
     }
     return render(request, 'accounts/checkout.html', context)
 
@@ -187,27 +167,5 @@ def payment_view(request):
 def payment_info(request):
     return HttpResponse("Payment Successful...")
 
-
 def payment_notify(request):
-    if request.method == 'POST':
-        postData = {
-            "orderId" : request.form['orderId'],
-            "orderAmount" : request.form['orderAmount'],
-            "referenceId" : request.form['referenceId'],
-            "txStatus" : request.form['txStatus'],
-            "paymentMode" : request.form['paymentMode'],
-            "txMsg" : request.form['txMsg'],
-            "txTime" : request.form['txTime'],
-            }
-        signatureData = postData["orderId"] + postData["orderAmount"] + postData["referenceId"] + postData["txStatus"] + postData["paymentMode"] + postData["txMsg"] + postData["txTime"]
-        message = bytes(signatureData).encode('utf-8')
-        #get secret key from your config
-        secret = bytes(secretKey).encode('utf-8')
-        signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
-        context = {
-            'layout': 0,
-            'footer': 0,
-            'payment': postData,
-            'signature': signature,
-        }
     return HttpResponse("Listning for payment details.........")
