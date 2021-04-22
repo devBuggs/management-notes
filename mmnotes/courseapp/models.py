@@ -19,7 +19,7 @@ class SemesterSubject(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
 
     def __str__(self):
-        return self.subject_code
+        return str(self.subject_code) + " - " + str(self.subject_name)
 
 class SubjectUnit(models.Model):
     subject_code = models.ForeignKey(SemesterSubject, on_delete=models.CASCADE)
@@ -27,4 +27,4 @@ class SubjectUnit(models.Model):
     unit_number = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.unit_number
+        return str(self.subject_code) + " / " + str(self.unit_number)
