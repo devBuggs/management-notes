@@ -1,6 +1,3 @@
-import hashlib
-import hmac
-import base64
 import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
@@ -16,13 +13,13 @@ from accounts.models import UserSubscription, SubscriptionPack, Course, UserCont
 from .forms import UserLoginForm, UserRegisterForm, EditUserProfileForm, EditContactForm
 
 
-
 # SubscriptionPack Instance
 default_pack = SubscriptionPack.objects.get(id=1)
 default_access = Course.objects.get(id=2)
 
-# Create your views here.
 
+
+# Create your views here.
 
 def login_view(request):
     next = request.GET.get('next')
@@ -169,3 +166,4 @@ def payment_info(request):
 
 def payment_notify(request):
     return HttpResponse("Listning for payment details.........")
+
