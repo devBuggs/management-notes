@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, get_user_model, login, logout
 
+
 # import models here
 from django.contrib.auth.models import User
 
@@ -13,10 +14,9 @@ from accounts.models import UserSubscription, SubscriptionPack, Course, UserCont
 from .forms import UserLoginForm, UserRegisterForm, EditUserProfileForm, EditContactForm
 
 
-# SubscriptionPack Instance
+# Global Instance
 default_pack = SubscriptionPack.objects.get(id=1)
 default_access = Course.objects.get(id=2)
-
 
 
 # Create your views here.
@@ -166,4 +166,5 @@ def payment_info(request):
 
 def payment_notify(request):
     return HttpResponse("Listning for payment details.........")
+
 
