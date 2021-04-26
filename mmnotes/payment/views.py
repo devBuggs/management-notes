@@ -6,14 +6,48 @@ from .paytm import generate_checksum, verify_checksum
 
 from django.views.decorators.csrf import csrf_exempt
 
+# import models
+from accounts.models import UserContact, UserSubscription, Course
+
+
 
 def initiate_payment(request):
     if request.method == "GET":
-        return render(request, 'payment/pay.html')
+        userName = str(request.user.username)
+        userContactInfo = UserContact.objects.get(username=userName).contact_number 
+        #orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])      #+str(userContactInfo[4:9])
+        orderAmount = '200'
+        orderCurrency = 'INR'
+        orderNote = 'Enroll Course Payment'
+        customerName = request.user.first_name +' '+ request.user.last_name
+        customerPhone = str(userContactInfo)
+        customerEmail = request.user.email
+
+        # Course data
+        courses = Course.objects.all()   #.in_bulk()
+        print("--------------------", courses, "------------------------------")
+
+        postData = {
+            "orderAmount" : orderAmount,
+            "orderCurrency" : orderCurrency,
+            "orderNote" : orderNote,
+            "customerName" : customerName,
+            "customerPhone" : customerPhone,
+            "customerEmail" : customerEmail,
+        }
+        
+        context = {
+            'layout': 0,
+            'footer': 0,
+            'payment': postData,
+            'courses': courses
+        }
+        return render(request, 'payment/pay.html', context)
     try:
         #username = request.user.username
         #password = request.POST['password']
         amount = int(request.POST['amount'])
+        course = request.POST['course']
         #user = authenticate(request, username=username, password=password)
         user = request.user
         if user is None:
@@ -41,6 +75,7 @@ def initiate_payment(request):
     checksum = generate_checksum(paytm_params, merchant_key)
 
     transaction.checksum = checksum
+    #transaction.course = course
     transaction.save()
 
     paytm_params['CHECKSUMHASH'] = checksum
