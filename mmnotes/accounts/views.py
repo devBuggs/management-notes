@@ -138,8 +138,6 @@ def payment_view(request):
     customerName = request.user.first_name + request.user.last_name
     customerPhone = str(userContactInfo)
     customerEmail = request.user.email
-    returnUrl = 'devbuggs.pythonanywhere.com'
-    notifyUrl = 'devbuggs.pythonanywhere.com'
 
     postData = {
         "orderId" : orderId,
@@ -149,8 +147,6 @@ def payment_view(request):
         "customerName" : customerName,
         "customerPhone" : customerPhone,
         "customerEmail" : customerEmail,
-        "returnUrl" : returnUrl,
-        "notifyUrl" : notifyUrl
     }
     
     context = {
@@ -159,12 +155,5 @@ def payment_view(request):
         'payment': postData
     }
     return render(request, 'accounts/checkout.html', context)
-
-@login_required
-def payment_info(request):
-    return HttpResponse("Payment Successful...")
-
-def payment_notify(request):
-    return HttpResponse("Listning for payment details.........")
 
 
