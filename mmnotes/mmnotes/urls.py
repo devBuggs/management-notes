@@ -26,5 +26,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('course/', include('courseapp.urls')),
     path('test/ui/', testUI, name='ui'),
+    path('', include('payment.urls')),
         
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

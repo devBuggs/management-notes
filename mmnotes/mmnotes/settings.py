@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'webapp.apps.WebappConfig',
     'accounts.apps.AccountsConfig',
     'courseapp.apps.CourseappConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +116,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Payment Credentials
+PAYTM_MERCHANT_ID = 'XOkuXm53192793537705'
+PAYTM_SECRET_KEY = 'MEx0Ty0t4j@2ID2%'
+PAYTM_WEBSITE = 'WEBSTAGING'
+PAYTM_CHANNEL_ID = 'WEB'
+PAYTM_INDUSTRY_TYPE_ID = 'Retail'
