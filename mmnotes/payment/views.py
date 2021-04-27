@@ -3,14 +3,14 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.conf import settings
 from .models import Transaction
 from .paytm import generate_checksum, verify_checksum
-
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 # import models
 from accounts.models import UserContact, UserSubscription, Course
 
 
-
+@login_required
 def initiate_payment(request):
     if request.method == "GET":
         userName = str(request.user.username)
@@ -48,6 +48,9 @@ def initiate_payment(request):
         #password = request.POST['password']
         amount = int(request.POST['amount'])
         course = request.POST['course']
+        print("---------------------------------------------", course, "---------------------------------------------")
+        userCourse = Course.objects.get(pk=course)
+        print("---------------------------------------------", userCourse, "---------------------------------------------")
         #user = authenticate(request, username=username, password=password)
         user = request.user
         if user is None:
@@ -71,11 +74,9 @@ def initiate_payment(request):
         ('CALLBACK_URL', 'http://127.0.0.1:8000/callback/'),
     )
     paytm_params = dict(params)
-    print('***************************', paytm_params, '---------------------------------')
     checksum = generate_checksum(paytm_params, merchant_key)
 
     transaction.checksum = checksum
-    #transaction.course = course
     transaction.save()
 
     paytm_params['CHECKSUMHASH'] = checksum
