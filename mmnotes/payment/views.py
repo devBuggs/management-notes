@@ -101,9 +101,35 @@ def callback(request):
         if is_valid_checksum:
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
+            #print("---------------------------------------------", received_data, "-------------------------------------")
+            # Upgrade UserAccount,  UserSubscription and give Access
+            userUpgradeObject = UserAccountUpgrade(request.user, received_data)
             return render(request, 'payment/callback.html', context=received_data)
         else:
             print("Checksum Mismatched")
             received_data['message'] = "Checksum Mismatched"
             return render(request, 'payment/callback.html', context=received_data)
         return render(request, 'payment/callback.html', context=received_data)
+
+
+
+class UserAccountUpgrade:
+    paymentData = {}
+    txnid = ''
+
+    def __init__(self, user, received_data):
+        self.user = user
+        self.paymentData = received_data
+        print("--------------------- User Account Upgradeing --------------------------")
+        print(self.paymentData)
+        #print(type(self.paymentData))
+        
+        for key,value in received_data.items():
+            #self.key = value
+            print("------------ ", key, " : ", value)
+
+        print(received_data['TXNID'])
+
+        
+
+
