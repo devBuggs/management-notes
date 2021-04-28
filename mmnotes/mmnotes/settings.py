@@ -46,7 +46,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mmnotes.urls'
 
-SESSION_COOKIE_AGE = 500 # one hour in seconds
+SESSION_COOKIE_AGE = 1800 # one hour in seconds
 
 TEMPLATES = [
     {
