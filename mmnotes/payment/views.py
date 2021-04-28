@@ -111,25 +111,6 @@ def callback(request):
             return render(request, 'payment/callback.html', context=received_data)
         return render(request, 'payment/callback.html', context=received_data)
 
-
-
-class UserAccountUpgrade:
-    paymentData = {}
-
-    def __init__(self, request, received_data):
-        self.user = request.user
-        print('--------------------', self.user)
-        self.paymentData = received_data
-        print("--------------------- User Account Upgradeing --------------------------")
-        #print(self.paymentData)
-        #print(type(self.paymentData))
-        
-        for key,value in received_data.items():
-            #self.key = value
-            print("------------ ", key, " : ", value)
-
-        print('-------------------------------', received_data['TXNID'])
-
-        
-
-
+@login_required
+def UserAccountUpgrade(request):
+    print('------------------------------- UserAccount ')
