@@ -102,8 +102,10 @@ def callback(request):
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
             #print("---------------------------------------------", received_data, "-------------------------------------")
-            # Upgrade UserAccount,  UserSubscription and give Access
-            userUpgradeObject = UserAccountUpgrade(request, received_data)
+            #userUpgradeObject = UserAccountUpgrade(request, received_data)
+            if received_data['txnid']:
+                print(received_data['txnid'])
+                print('-------------------------------------------')
             return render(request, 'payment/callback.html', context=received_data)
         else:
             print("Checksum Mismatched")
