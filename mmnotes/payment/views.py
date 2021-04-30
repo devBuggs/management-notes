@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.conf import settings
 from .models import Transaction
@@ -105,8 +105,9 @@ def callback(request):
             #userUpgradeObject = UserAccountUpgrade(request, received_data)
             if received_data['txnid']:
                 print(received_data['txnid'])
-                print('-------------------------------------------')
-            return render(request, 'payment/callback.html', context=received_data)
+                print('-------------------- Upgrading User Subscription Data -----------------------')
+            #return render(request, 'payment/callback.html', context=received_data)\
+            return redirect(paymentCallback)
         else:
             print("Checksum Mismatched")
             received_data['message'] = "Checksum Mismatched"
@@ -114,5 +115,13 @@ def callback(request):
         return render(request, 'payment/callback.html', context=received_data)
 
 @login_required
-def UserAccountUpgrade(request):
-    print('------------------------------- UserAccount ')
+def paymentCallback(request, received_data):
+    if received_data:
+        for key,value in received_data:
+            print('---------------------- ', key, " : ", value)
+        # fetch current user subscription
+        currentSub = UserSubscription.objects.get(username=request.user.username)
+        print("------------------------->", currentSub)
+        return render(request, 'payment/callback.html', context=received_data)
+    else:
+        return render("<h1> Error Occured... </h1>")
