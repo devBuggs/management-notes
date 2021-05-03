@@ -101,27 +101,29 @@ def callback(request):
         if is_valid_checksum:
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
-            #print("---------------------------------------------", received_data, "-------------------------------------")
-            #userUpgradeObject = UserAccountUpgrade(request, received_data)
-            if received_data['txnid']:
-                print(received_data['txnid'])
+            print("---------------------------------------------", received_data, "-------------------------------------")
+            
+            if received_data:
+                print("///////////////////////////////--- TXNID :", received_data['TXNID'])
                 print('-------------------- Upgrading User Subscription Data -----------------------')
-            #return render(request, 'payment/callback.html', context=received_data)\
-            return redirect(paymentCallback)
+                paymentCallback(received_data)
+                print(request.session)
+                #return redirect(paymentCallback(received_data))
+            return render(request, 'payment/callback.html', context=received_data)
         else:
             print("Checksum Mismatched")
             received_data['message'] = "Checksum Mismatched"
             return render(request, 'payment/callback.html', context=received_data)
         return render(request, 'payment/callback.html', context=received_data)
 
-@login_required
+#@login_required
 def paymentCallback(request, received_data):
     if received_data:
-        for key,value in received_data:
-            print('---------------------- ', key, " : ", value)
+        #for key,value in received_data:
+            #print('---------------------- ', key, " : ", value)
         # fetch current user subscription
-        currentSub = UserSubscription.objects.get(username=request.user.username)
-        print("------------------------->", currentSub)
+        #currentSub = UserSubscription.objects.get(username=request.user.username)
+        print("------------------------->", received_data)
         return render(request, 'payment/callback.html', context=received_data)
     else:
         return render("<h1> Error Occured... </h1>")
