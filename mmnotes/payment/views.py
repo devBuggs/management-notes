@@ -9,11 +9,14 @@ from django.views.decorators.csrf import csrf_exempt
 # import models
 from accounts.models import UserContact, UserSubscription, Course
 
+userSession = ''
 
 @login_required
 def initiate_payment(request):
     if request.method == "GET":
         userName = str(request.user.username)
+        userSession = request.user
+        print("-------------> User Object", userSession)
         userContactInfo = UserContact.objects.get(username=userName).contact_number 
         #orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])      #+str(userContactInfo[4:9])
         orderAmount = '200'
@@ -25,7 +28,7 @@ def initiate_payment(request):
 
         # Course data
         courses = Course.objects.all()   #.in_bulk()
-        print("--------------------", courses, "------------------------------")
+        #print("--------------------", courses, "------------------------------")
 
         postData = {
             "orderAmount" : orderAmount,
@@ -83,7 +86,6 @@ def initiate_payment(request):
     print('SENT: ', checksum)
     return render(request, 'payment/redirect.html', context=paytm_params)
 
-
 @csrf_exempt
 def callback(request):
     if request.method == 'POST':
@@ -102,12 +104,9 @@ def callback(request):
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
             print("---------------------------------------------", received_data, "-------------------------------------")
-            
             if received_data:
-                print("///////////////////////////////--- TXNID :", received_data['TXNID'])
                 print('-------------------- Upgrading User Subscription Data -----------------------')
-                paymentCallback(received_data)
-                print(request.session)
+                print("--------------------------> ", userSession)
                 #return redirect(paymentCallback(received_data))
             return render(request, 'payment/callback.html', context=received_data)
         else:
@@ -119,11 +118,8 @@ def callback(request):
 #@login_required
 def paymentCallback(request, received_data):
     if received_data:
-        #for key,value in received_data:
-            #print('---------------------- ', key, " : ", value)
-        # fetch current user subscription
-        #currentSub = UserSubscription.objects.get(username=request.user.username)
-        print("------------------------->", received_data)
+        for key,value in received_data:
+            print('---------------------- ', key, " : ", value)
         return render(request, 'payment/callback.html', context=received_data)
     else:
         return render("<h1> Error Occured... </h1>")
