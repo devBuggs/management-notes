@@ -48,8 +48,7 @@ def register_view(request):
         password = form.cleaned_data.get('password')
         user.set_password(password)
         # Subscription details of correspondance user
-        userSub = UserSubscription(
-            username=user, subscription_details=default_pack, subject_details=default_access)
+        userSub = UserSubscription(username=user, subscription_details=default_pack, subject_details=default_access)
         user.save()
         userSub.save()
         new_user = authenticate(username=user.username, password=password)
