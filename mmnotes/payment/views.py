@@ -116,10 +116,17 @@ def callback(request):
         return render(request, 'payment/callback.html', context=received_data)
 
 #@login_required
-def paymentCallback(request, received_data):
+def paymentCallback(request):
+    received_data = dict()
     if received_data:
         for key,value in received_data:
             print('---------------------- ', key, " : ", value)
         return render(request, 'payment/callback.html', context=received_data)
     else:
         return render("<h1> Error Occured... </h1>")
+
+
+# TODO LIST
+#   00. Getting user object
+#   01. Getting user_subscription object
+#   02. Updating user_subscription object
