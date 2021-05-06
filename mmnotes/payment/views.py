@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 # import models
 from accounts.models import UserContact, UserSubscription, Course, SubscriptionPack
 
+UnlimitedAccess = SubscriptionPack.objects.get(subscription = "UnlimitedAccess")
+
 @login_required
 def initiate_payment(request):
     if request.method == "GET":
@@ -115,12 +117,26 @@ def paymentCallback(request):
         user = request.user
         received_data = dict(request.POST)
         for key,value in received_data.items():
-            print("-----------------> ", key, " : ", value)
+            print("--------> ", key, " : ", value)
         if received_data['STATUS'] and received_data['BANKTXNID']:
-            pass
-            #currentUserSubs = UserSubscription.objects.get(username = user.id)
-            #print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+            currentUserSubs = UserSubscription.objects.get(username = user.id)
+            print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+            print("__________________________> ", UnlimitedAccess)
+            if str(currentUserSubs.subscription_details) == "NoAccess":
+                currentUserSubs.subscription_details = UnlimitedAccess
+                currentUserSubs.save()
         return render(request, 'payment/test.html', context=None)
+    else:
+        # Course data
+        courses = Course.objects.all()   #.in_bulk()
+        #print("--------------------", courses, "------------------------------")
+        context = {
+            'layout': 0,
+            'footer': 0,
+            'courses': courses
+        }
+        return render(request, 'payment/test.html', context)
+
 
 
 
