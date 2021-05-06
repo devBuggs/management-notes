@@ -7,16 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 # import models
-from accounts.models import UserContact, UserSubscription, Course
-
-userSession = ''
+from accounts.models import UserContact, UserSubscription, Course, SubscriptionPack
 
 @login_required
 def initiate_payment(request):
     if request.method == "GET":
         userName = str(request.user.username)
-        userSession = request.user
-        print("-------------> User Object", userSession)
         userContactInfo = UserContact.objects.get(username=userName).contact_number 
         #orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])      #+str(userContactInfo[4:9])
         orderAmount = '200'
@@ -103,11 +99,9 @@ def callback(request):
         if is_valid_checksum:
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
-            print("---------------------------------------------", received_data, "-------------------------------------")
+            #print("---------------------------------------------", received_data, "-------------------------------------")
             if received_data:
                 print('-------------------- Upgrading User Subscription Data -----------------------')
-                print("--------------------------> ", userSession)
-                #return redirect(paymentCallback(received_data))
             return render(request, 'payment/callback.html', context=received_data)
         else:
             print("Checksum Mismatched")
@@ -117,16 +111,21 @@ def callback(request):
 
 #@login_required
 def paymentCallback(request):
-    received_data = dict()
-    if received_data:
-        for key,value in received_data:
-            print('---------------------- ', key, " : ", value)
-        return render(request, 'payment/callback.html', context=received_data)
-    else:
-        return render("<h1> Error Occured... </h1>")
+    if request.method == "POST":
+        user = request.user
+        received_data = dict(request.POST)
+        for key,value in received_data.items():
+            print("-----------------> ", key, " : ", value)
+        if received_data['STATUS'] and received_data['BANKTXNID']:
+            pass
+            #currentUserSubs = UserSubscription.objects.get(username = user.id)
+            #print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+        return render(request, 'payment/test.html', context=None)
+
+
 
 
 # TODO LIST
-#   00. Getting user object
+#   00. Getting user object     -- Done
 #   01. Getting user_subscription object
 #   02. Updating user_subscription object
