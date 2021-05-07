@@ -111,29 +111,43 @@ def callback(request):
             return render(request, 'payment/callback.html', context=received_data)
         return render(request, 'payment/callback.html', context=received_data)
 
-#@login_required
+@login_required
 def paymentCallback(request):
     if request.method == "POST":
         user = request.user
         received_data = dict(request.POST)
-        for key,value in received_data.items():
-            print("--------> ", key, " : ", value)
-        if received_data['STATUS'] and received_data['BANKTXNID']:
-            currentUserSubs = UserSubscription.objects.get(username = user.id)
-            print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
-            print("__________________________> ", UnlimitedAccess)
-            if str(currentUserSubs.subscription_details) == "NoAccess":
-                currentUserSubs.subscription_details = UnlimitedAccess
-                currentUserSubs.save()
-        return render(request, 'payment/test.html', context=None)
+        if received_data:
+            for key,value in received_data.items():
+                print("--------> ", key, " : ", value)
+            if received_data['STATUS'] and received_data['BANKTXNID']:
+                currentUserSubs = UserSubscription.objects.get(username = user.id)
+                print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+                print("__________________________> ", UnlimitedAccess)
+                if str(currentUserSubs.subscription_details) == "NoAccess":
+                    currentUserSubs.subscription_details = UnlimitedAccess
+                    currentUserSubs.save()
+        else:
+            raise ValueError("Payment before enrollment!")
+        context = {
+            'layout': 0,
+            'footer': 0,
+            'subscription': str(currentUserSubs.subscription_details),
+        }
+        return render(request, 'payment/test.html', context)
     else:
+        user = request.user
+        # Current User Subscription
+        currentUserSubs = UserSubscription.objects.get(username = user.id)
+        print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+                
         # Course data
         courses = Course.objects.all()   #.in_bulk()
         #print("--------------------", courses, "------------------------------")
         context = {
             'layout': 0,
             'footer': 0,
-            'courses': courses
+            'courses': courses,
+            'subscription': str(currentUserSubs.subscription_details)
         }
         return render(request, 'payment/test.html', context)
 
