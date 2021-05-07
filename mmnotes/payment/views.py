@@ -5,9 +5,14 @@ from .models import Transaction
 from .paytm import generate_checksum, verify_checksum
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # import models
 from accounts.models import UserContact, UserSubscription, Course, SubscriptionPack
+
+# import Views 
+from accounts.views import profile_view
+from courseapp.views import dashboard_view
 
 UnlimitedAccess = SubscriptionPack.objects.get(subscription = "UnlimitedAccess")
 
@@ -121,16 +126,18 @@ def paymentCallback(request):
                 print("--------> ", key, " : ", value)
             if received_data['STATUS'] and received_data['BANKTXNID']:
                 currentUserSubs = UserSubscription.objects.get(username = user.id)
-                print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
-                print("__________________________> ", UnlimitedAccess)
+                #print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
+                #print("__________________________> ", UnlimitedAccess)
                 if str(currentUserSubs.subscription_details) == "NoAccess":
                     currentUserSubs.subscription_details = UnlimitedAccess
                     currentUserSubs.save()
         else:
             raise ValueError("Payment before enrollment!")
+        courses = Course.objects.all()   #.in_bulk()
         context = {
             'layout': 0,
             'footer': 0,
+            'courses': courses,
             'subscription': str(currentUserSubs.subscription_details),
         }
         return render(request, 'payment/test.html', context)
@@ -151,11 +158,19 @@ def paymentCallback(request):
         }
         return render(request, 'payment/test.html', context)
 
-
-
-
-
-# TODO LIST
-#   00. Getting user object     -- Done
-#   01. Getting user_subscription object
-#   02. Updating user_subscription object
+@login_required()
+def enrollmentCourse(request):
+    if request.method == 'POST':
+        user = request.user
+        course = request.POST['course']
+        print("__________ ::", course)
+        if course:
+            currentUserSubs = UserSubscription.objects.get(username = user.id)
+            enrollmentCourse = Course.objects.get(id=course)
+            currentUserSubs.subject_details = enrollmentCourse
+            currentUserSubs.save()
+            return redirect(dashboard_view)
+        else:
+            raise ValueError("Something went wrong.. ")
+    return HttpResponse("<h1> Enrollment Updating.. please wait, whille we're working on your account.. </h1>")
+            
