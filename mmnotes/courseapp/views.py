@@ -100,20 +100,3 @@ def data_view(request, semester_code, subject_code, unit_code):
         'semester_code': semester_code,
     }
     return HttpResponse(template.render(context, request))
-
-@login_required
-def testUI(request):
-    currentUser = request.user
-    subscription = UserSubscription.objects.get(username=currentUser.id)
-    accessType = subscription.subscription_details
-    subjectAccess = subscription.subject_details
-    semList = CourseSemester.objects.filter(course_name = subjectAccess).in_bulk()
-    print("-------------------------------", semList.items())
-    
-    context = {
-        'navType': 'semester',
-        'accessType': str(accessType),
-        'subject': str(subjectAccess),
-        'navlink': semList.values(),
-    }
-    return render(request, 'course/UI_test.html', context)

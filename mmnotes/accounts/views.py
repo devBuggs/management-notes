@@ -125,34 +125,3 @@ def profile_view(request):
         'subject': str(subjectAccess),
     }
     return render(request, "accounts/profile.html", context)
-
-@login_required
-def payment_view(request):
-    userName = str(request.user.username)
-    userContactInfo = UserContact.objects.get(username=userName).contact_number 
-    orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])+str(userContactInfo[4:9])
-    orderAmount = '200'
-    orderCurrency = 'INR'
-    orderNote = 'Payment'
-    customerName = request.user.first_name + request.user.last_name
-    customerPhone = str(userContactInfo)
-    customerEmail = request.user.email
-
-    postData = {
-        "orderId" : orderId,
-        "orderAmount" : orderAmount,
-        "orderCurrency" : orderCurrency,
-        "orderNote" : orderNote,
-        "customerName" : customerName,
-        "customerPhone" : customerPhone,
-        "customerEmail" : customerEmail,
-    }
-    
-    context = {
-        'layout': 0,
-        'footer': 0,
-        'payment': postData
-    }
-    return render(request, 'accounts/checkout.html', context)
-
-

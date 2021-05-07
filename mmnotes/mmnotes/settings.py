@@ -116,7 +116,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Payment Credentials
+# Payment Merchant Credentials
 PAYTM_MERCHANT_ID = 'XOkuXm53192793537705'
 PAYTM_SECRET_KEY = 'MEx0Ty0t4j@2ID2%'
 PAYTM_WEBSITE = 'WEBSTAGING'

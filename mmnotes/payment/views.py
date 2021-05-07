@@ -21,18 +21,13 @@ def initiate_payment(request):
     if request.method == "GET":
         userName = str(request.user.username)
         userContactInfo = UserContact.objects.get(username=userName).contact_number 
-        #orderId = str(request.user.first_name[0:3])+str(request.user.last_name[0:3])      #+str(userContactInfo[4:9])
         orderAmount = '200'
         orderCurrency = 'INR'
         orderNote = 'Enroll Course Payment'
         customerName = request.user.first_name +' '+ request.user.last_name
         customerPhone = str(userContactInfo)
         customerEmail = request.user.email
-
-        # Course data
-        courses = Course.objects.all()   #.in_bulk()
-        #print("--------------------", courses, "------------------------------")
-
+        courses = Course.objects.all()
         postData = {
             "orderAmount" : orderAmount,
             "orderCurrency" : orderCurrency,
@@ -50,14 +45,9 @@ def initiate_payment(request):
         }
         return render(request, 'payment/pay.html', context)
     try:
-        #username = request.user.username
-        #password = request.POST['password']
         amount = int(request.POST['amount'])
         course = request.POST['course']
-        print("---------------------------------------------", course, "---------------------------------------------")
         userCourse = Course.objects.get(pk=course)
-        print("---------------------------------------------", userCourse, "---------------------------------------------")
-        #user = authenticate(request, username=username, password=password)
         user = request.user
         if user is None:
             raise ValueError
@@ -106,9 +96,6 @@ def callback(request):
         if is_valid_checksum:
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
-            #print("---------------------------------------------", received_data, "-------------------------------------")
-            if received_data:
-                print('-------------------- Upgrading User Subscription Data -----------------------')
             return render(request, 'payment/callback.html', context=received_data)
         else:
             print("Checksum Mismatched")
@@ -126,14 +113,12 @@ def paymentCallback(request):
                 print("--------> ", key, " : ", value)
             if received_data['STATUS'] and received_data['BANKTXNID']:
                 currentUserSubs = UserSubscription.objects.get(username = user.id)
-                #print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
-                #print("__________________________> ", UnlimitedAccess)
                 if str(currentUserSubs.subscription_details) == "NoAccess":
                     currentUserSubs.subscription_details = UnlimitedAccess
                     currentUserSubs.save()
         else:
             raise ValueError("Payment before enrollment!")
-        courses = Course.objects.all()   #.in_bulk()
+        courses = Course.objects.all()
         context = {
             'layout': 0,
             'footer': 0,
@@ -143,13 +128,8 @@ def paymentCallback(request):
         return render(request, 'payment/test.html', context)
     else:
         user = request.user
-        # Current User Subscription
         currentUserSubs = UserSubscription.objects.get(username = user.id)
-        print("Current User Subscription :", currentUserSubs.subscription_details, "\n Course Access :", currentUserSubs.subject_details)
-                
-        # Course data
-        courses = Course.objects.all()   #.in_bulk()
-        #print("--------------------", courses, "------------------------------")
+        courses = Course.objects.all()
         context = {
             'layout': 0,
             'footer': 0,
@@ -163,7 +143,6 @@ def enrollmentCourse(request):
     if request.method == 'POST':
         user = request.user
         course = request.POST['course']
-        print("__________ ::", course)
         if course:
             currentUserSubs = UserSubscription.objects.get(username = user.id)
             enrollmentCourse = Course.objects.get(id=course)
