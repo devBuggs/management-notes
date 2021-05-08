@@ -16,8 +16,6 @@ def dashboard_view(request):
     accessType = subscription.subscription_details
     subjectAccess = subscription.subject_details
     semList = CourseSemester.objects.filter(course_name = subjectAccess).in_bulk()
-    print("===================== sem List", semList, "--------------- type :", type(semList))
-    print("-------------- ", semList.values())
     context = {
         'layout': 1,
         'footer': 0,
@@ -28,7 +26,6 @@ def dashboard_view(request):
     }
     return render(request, "course/main.html", context)
 
-
 @login_required
 def sub_view(request, semester_code):
     currentUser = request.user
@@ -37,8 +34,6 @@ def sub_view(request, semester_code):
     subjectAccess = subscription.subject_details
     semInfo = CourseSemester.objects.get(semester_code= semester_code)
     subjectList = SemesterSubject.objects.filter(semester_code = semInfo).in_bulk()
-    print("===================== subject List", subjectList, "--------------- type :", type(subjectList))
-    print("-------------- ", subjectList.values())
     context = {
         'layout': 1,
         'footer': 0,
@@ -58,8 +53,6 @@ def unit_view(request, semester_code, subject_code):
     semInfo = CourseSemester.objects.get(semester_code= semester_code)
     subInfo = SemesterSubject.objects.get(subject_code= subject_code)
     unitList = SubjectUnit.objects.filter(subject_code = subInfo).in_bulk()
-    print("===================== unit List", unitList, "--------------- type :", type(unitList))
-    print("-------------- ", unitList.values())
     context = {
         'layout': 1,
         'footer': 0,
@@ -76,7 +69,6 @@ def data_view(request, semester_code, subject_code, unit_code):
     semID = semester_code
     subCode = subject_code
     unitNo = unit_code
-    
     currentUser = request.user
     subscription = UserSubscription.objects.get(username=currentUser.id)
     accessType = subscription.subscription_details
@@ -84,11 +76,8 @@ def data_view(request, semester_code, subject_code, unit_code):
     semInfo = CourseSemester.objects.get(semester_code= semester_code)
     subInfo = SemesterSubject.objects.get(subject_code= subject_code)
     unitList = SubjectUnit.objects.filter(subject_code = subInfo).in_bulk()
-    #print("===================== unit List", unitList, "--------------- type :", type(unitList))
-    #print("-------------- ", unitList.values())
     
     fileName = "course/source/"+str(semID)+str(subCode)+str(unitNo)+".html"
-    #print("*******************************************", fileName)
     template = loader.get_template(fileName)
     context = {
         'layout': 1,

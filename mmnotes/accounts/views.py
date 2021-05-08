@@ -31,7 +31,6 @@ def login_view(request):
         login(request, user)
         if next:
             return redirect(next)
-        # Redirect to HOME-VIEW
         return redirect(profile_view)
     context = {
         'form': form,
@@ -47,7 +46,6 @@ def register_view(request):
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')
         user.set_password(password)
-        # Subscription details of correspondance user
         userSub = UserSubscription(username=user, subscription_details=default_pack, subject_details=default_access)
         user.save()
         userSub.save()
@@ -67,21 +65,12 @@ def register_view(request):
 def editprofile_view(request):
     form = EditUserProfileForm(request.POST or None)
     if form.is_valid():
-        #form = form.save()
         user = User.objects.get(id=request.user.id)
-        print("Printing User : ", user)
         fname = form.cleaned_data.get('first_name')
         lname = form.cleaned_data.get('last_name')
-        print("*************** fname : ", fname)
-        print("*************** lname : ", lname)
         user.first_name = str(fname)
         user.last_name = str(lname)
-        print("--------------- user.first_name : ", user.first_name)
-        print("--------------- user.last_name : ", user.last_name)
-        print("*************** assing fname = ", str(fname))
-        print("*************** assing lname = ", str(lname))
         user.save()
-
         return redirect(profile_view)
     context = {
         'form': form,
@@ -95,10 +84,8 @@ def editContact_view(request):
     if form.is_valid():
         username = str(request.user.username)
         contactNo = form.cleaned_data.get('contact_number')
-        print("*********************** contact Number : ", contactNo)
         contact = UserContact.objects.create(username=username, contact_number=contactNo)
         contact.save()
-
         return redirect(profile_view)
     context = {
         'form': form,
@@ -109,7 +96,6 @@ def editContact_view(request):
 
 def logout_view(request):
     logout(request)
-    # Redirect to User-Login-Page
     return redirect('/')
 
 @login_required

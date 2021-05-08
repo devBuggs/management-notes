@@ -36,7 +36,6 @@ def initiate_payment(request):
             "customerPhone" : customerPhone,
             "customerEmail" : customerEmail,
         }
-        
         context = {
             'layout': 0,
             'footer': 0,
