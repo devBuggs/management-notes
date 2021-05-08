@@ -124,7 +124,7 @@ def paymentCallback(request):
             'courses': courses,
             'subscription': str(currentUserSubs.subscription_details),
         }
-        return render(request, 'payment/test.html', context)
+        return render(request, 'payment/paymentCallback.html', context)
     else:
         user = request.user
         currentUserSubs = UserSubscription.objects.get(username = user.id)
@@ -135,7 +135,7 @@ def paymentCallback(request):
             'courses': courses,
             'subscription': str(currentUserSubs.subscription_details)
         }
-        return render(request, 'payment/test.html', context)
+        return render(request, 'payment/paymentCallback.html', context)
 
 @login_required()
 def enrollmentCourse(request):
