@@ -81,18 +81,46 @@ def editprofile_view(request):
 @login_required
 def editContact_view(request):
     form = EditContactForm(request.POST or None)
-    if form.is_valid():
-        username = str(request.user.username)
-        contactNo = form.cleaned_data.get('contact_number')
-        contact = UserContact.objects.create(username=username, contact_number=contactNo)
-        contact.save()
-        return redirect(profile_view)
-    context = {
-        'form': form,
-        'type': 'contact',
-        'footer': 0,
-    }
-    return render(request, 'accounts/editcontact.html', context)
+    if request.method == "POST":
+        if form.is_valid():
+            username = str(request.user.username)
+            contactNo = form.cleaned_data.get('contact_number')
+            contact = UserContact.objects.filter(username=username)
+            if contact:
+                currentContact = UserContact.objects.get(username=username)
+                currentContact.contact_number = contactNo
+                currentContact.save()
+                return redirect(profile_view)
+            else:
+                contact = UserContact.objects.create(username=username, contact_number=contactNo)
+                contact.save()
+                return redirect(profile_view)
+        context = {
+            'form': form,
+            'type': 'contact',
+            'footer': 0,
+        }
+        return render(request, 'accounts/editcontact.html', context)
+    else:
+        username = request.user.username
+        contact = UserContact.objects.filter(username=username)
+        if contact:
+            currentContact = UserContact.objects.get(username=username)
+            context = {
+                'form': form,
+                'type': 'contact',
+                'footer': 0,
+                'contact': currentContact.contact_number,
+            }
+            return render(request, 'accounts/editcontact.html', context)
+        else:
+            print("No Contact exist")
+            context = {
+                'form': form,
+                'type': 'contact',
+                'footer': 0,
+            }
+            return render(request, 'accounts/editcontact.html', context)
 
 def logout_view(request):
     logout(request)
@@ -101,14 +129,29 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     currentUser = request.user
+    isNameNone = False
+    isContactNone = False
     subscription = UserSubscription.objects.get(username=currentUser.id)
+    contact = UserContact.objects.filter(username=str(currentUser.username))
+    print("---------------", contact)
     accessType = subscription.subscription_details
     subjectAccess = subscription.subject_details
     # TODO check user_fname, user_lname and user_contact
+    if currentUser.first_name == "" and currentUser.last_name == "":
+        print("----------------------- Incomplete profile -----------------------")
+        isNameNone = True 
+    if contact.exists():
+        print("----------------------- contact found -----------------------")
+        print("---------------", contact)
+    else:
+        print("----------------------- No contact found -----------------------")
+        isContactNone = True
     context = {
         'layout': 0,
         'footer': 1,
         'accessType': str(accessType),
         'subject': str(subjectAccess),
+        'nameAlert': isNameNone,
+        'contactAlert': isContactNone,
     }
     return render(request, "accounts/profile.html", context)
