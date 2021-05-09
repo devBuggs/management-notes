@@ -104,6 +104,7 @@ def profile_view(request):
     subscription = UserSubscription.objects.get(username=currentUser.id)
     accessType = subscription.subscription_details
     subjectAccess = subscription.subject_details
+    # TODO check user_fname, user_lname and user_contact
     context = {
         'layout': 0,
         'footer': 1,
