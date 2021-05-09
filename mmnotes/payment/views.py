@@ -93,6 +93,7 @@ def callback(request):
         # Verify checksum
         is_valid_checksum = verify_checksum(paytm_params, settings.PAYTM_SECRET_KEY, str(paytm_checksum))
         if is_valid_checksum:
+            donePayment = "['TXN_SUCCESS']"
             print("Checksum Matched")
             received_data['message'] = "Checksum Matched"
             return render(request, 'payment/callback.html', context=received_data)
@@ -101,20 +102,32 @@ def callback(request):
             received_data['message'] = "Checksum Mismatched"
             return render(request, 'payment/callback.html', context=received_data)
         return render(request, 'payment/callback.html', context=received_data)
+    else:
+        context = {
+            "error" : 1,
+        }
+        return render(request, 'payment/callback.html', context)
 
 @login_required
 def paymentCallback(request):
     if request.method == "POST":
         user = request.user
-        received_data = dict(request.POST)
+        received_data = request.POST
+        currentUserSubs = UserSubscription.objects.get(username = user.id)
         if received_data:
-            for key,value in received_data.items():
-                print("--------> ", key, " : ", value)
-            if received_data['STATUS'] and received_data['BANKTXNID']:
-                currentUserSubs = UserSubscription.objects.get(username = user.id)
+            if str(received_data['STATUS']) == "['TXN_SUCCESS']" and received_data['BANKTXNID']:
+                print("---------- Upgrading User Account ---------------")
                 if str(currentUserSubs.subscription_details) == "NoAccess":
                     currentUserSubs.subscription_details = UnlimitedAccess
                     currentUserSubs.save()
+                elif str(currentUserSubs.subscription_details) == "LimitedAccess":
+                    currentUserSubs.subscription_details = UnlimitedAccess
+                    currentUserSubs.save()
+                else:
+                    pass
+            elif str(received_data['STATUS']) == "['TXN_FAILURE']":
+                print("------------- Payment Failed -----------------")
+                return redirect(initiate_payment)
         else:
             raise ValueError("Payment before enrollment!")
         courses = Course.objects.all()
@@ -128,14 +141,22 @@ def paymentCallback(request):
     else:
         user = request.user
         currentUserSubs = UserSubscription.objects.get(username = user.id)
-        courses = Course.objects.all()
-        context = {
-            'layout': 0,
-            'footer': 0,
-            'courses': courses,
-            'subscription': str(currentUserSubs.subscription_details)
-        }
-        return render(request, 'payment/paymentCallback.html', context)
+        if str(currentUserSubs.subscription_details) == "NoAccess":
+            context = {
+                'layout': 0,
+                'footer': 0,
+                "error" : 1,
+            }
+            return render(request, 'payment/paymentCallback.html', context)
+        else:
+            courses = Course.objects.all()
+            context = {
+                'layout': 0,
+                'footer': 0,
+                'courses': courses,
+                'subscription': str(currentUserSubs.subscription_details)
+            }
+            return render(request, 'payment/paymentCallback.html', context)
 
 @login_required()
 def enrollmentCourse(request):
@@ -148,7 +169,10 @@ def enrollmentCourse(request):
             currentUserSubs.subject_details = enrollmentCourse
             currentUserSubs.save()
             return redirect(dashboard_view)
-        else:
-            raise ValueError("Something went wrong.. ")
-    return HttpResponse("<h1> Enrollment Updating.. please wait, whille we're working on your account.. </h1>")
-            
+    else:
+        context = {
+                'layout': 0,
+                'footer': 0,
+                "error" : 0,
+            }
+        return render(request, 'payment/paymentCallback.html', context)
