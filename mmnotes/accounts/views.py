@@ -148,7 +148,7 @@ def profile_view(request):
         isContactNone = True
     context = {
         'layout': 0,
-        'footer': 1,
+        'footer': 0,
         'accessType': str(accessType),
         'subject': str(subjectAccess),
         'nameAlert': isNameNone,
