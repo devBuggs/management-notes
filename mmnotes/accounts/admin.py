@@ -11,7 +11,7 @@ class UserSubscriptionAdmin(admin.ModelAdmin):
     list_filter = ['subscription_details', 'subject_details']
 
 # Register your models here.
-admin.site.register(SubscriptionPack)
+#admin.site.register(SubscriptionPack)
 admin.site.register(UserSubscription, UserSubscriptionAdmin)
 admin.site.register(Course)
 admin.site.register(LoggedInUser)
