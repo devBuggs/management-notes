@@ -6,7 +6,7 @@ class contactAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject')
 
 class ClientReviewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'message')
+    list_display = ('name', 'email', 'role')
 
 # Register your models here.
 admin.site.register(contact, contactAdmin)
