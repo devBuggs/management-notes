@@ -17,7 +17,7 @@ def index(request):
         context = {
             'review_list' : review_list,
         }
-    return render(request, 'web/index.html', context=None)
+    return render(request, 'web/index.html', context)
 
 def contact_view(request):
     serverMsg = ''
