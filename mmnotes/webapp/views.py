@@ -3,15 +3,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 
 # import models here
-from .models import contact
+from .models import contact, ClientReview
 
 from .forms import contact_form
 
 # Create your views here.
 def index(request):
     if request.method == 'POST':
-        #searchKey = request.POST['homeSearch']
         return HttpResponse("index post method. ECORPIN CORP")
+    else:
+        review_list = ClientReview.objects.all()
+        print("---------->", review_list)
+        context = {
+            'review_list' : review_list,
+        }
     return render(request, 'web/index.html', context=None)
 
 def contact_view(request):
