@@ -138,7 +138,7 @@ def profile_view(request):
     subjectAccess = subscription.subject_details
     # TODO check user_fname, user_lname and user_contact
     if currentUser.first_name == "" and currentUser.last_name == "":
-        print("----------------------- Incomplete profile -----------------------")
+        #print("----------------------- Incomplete profile -----------------------")
         isNameNone = True 
     if contact.exists():
         print("----------------------- contact found -----------------------")
