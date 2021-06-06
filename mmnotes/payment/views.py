@@ -67,7 +67,7 @@ def initiate_payment(request):
         ('WEBSITE', settings.PAYTM_WEBSITE),
         ('INDUSTRY_TYPE_ID', settings.PAYTM_INDUSTRY_TYPE_ID),
         ('CALLBACK_URL', 'http://127.0.0.1:8000/callback/'),
-    )
+    ) #CALLBACK_URK needs to change with domain 
     paytm_params = dict(params)
     checksum = generate_checksum(paytm_params, merchant_key)
 
