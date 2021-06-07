@@ -142,7 +142,7 @@ def profile_view(request):
         isNameNone = True 
     if contact.exists():
         print("----------------------- contact found -----------------------")
-        #print("---------------", contact)
+        print("---------------", contact)
     else:
         print("----------------------- No contact found -----------------------")
         isContactNone = True
