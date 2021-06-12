@@ -13,6 +13,7 @@ from accounts.models import UserContact, UserSubscription, Course, SubscriptionP
 # import Views 
 from accounts.views import profile_view
 from courseapp.views import dashboard_view
+# App variable
 
 UnlimitedAccess = SubscriptionPack.objects.get(subscription = "UnlimitedAccess")
 
