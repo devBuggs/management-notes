@@ -133,10 +133,9 @@ def profile_view(request):
     isContactNone = False
     subscription = UserSubscription.objects.get(username=currentUser.id)
     contact = UserContact.objects.filter(username=str(currentUser.username))
-    print("---------------", contact)
+    #print("---------------", contact)
     accessType = subscription.subscription_details
     subjectAccess = subscription.subject_details
-    # TODO check user_fname, user_lname and user_contact
     if currentUser.first_name == "" and currentUser.last_name == "":
         #print("----------------------- Incomplete profile -----------------------")
         isNameNone = True 
