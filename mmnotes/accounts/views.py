@@ -154,3 +154,7 @@ def profile_view(request):
         'contactAlert': isContactNone,
     }
     return render(request, "accounts/profile.html", context)
+
+
+def editAccount_view(request):
+    return render(request, 'accounts/editAccount.html', context=None)
