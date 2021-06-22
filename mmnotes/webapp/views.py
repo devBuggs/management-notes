@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils import timezone
 
 # import models here
 from .models import contact, ClientReview
@@ -10,10 +9,12 @@ from .forms import contact_form
 # Create your views here.
 def index(request):
     if request.method == 'POST':
+        #searchValue = request.POST
+        #print("-------------------> Search value:", searchValue)
         return HttpResponse("index post method. ECORPIN CORP")
     else:
         review_list = ClientReview.objects.all()
-        print("---------->", review_list)
+        print("------------------->", review_list)
         context = {
             'review_list' : review_list,
         }
@@ -35,7 +36,8 @@ def contact_view(request):
 def search_view(request):
     if request.method == 'POST':
         search_keyword = request.POST['homeSearch']
+        print("-------------------> ", search_keyword)
         if search_keyword is not None:
-            print("----------------> ", search_keyword)
-        return HttpResponse("Search is under construction.")
+            print("-------------------> Searching in database outside index_view ..............")
+        return HttpResponse("Search is under construction. #ecorpians")
     return HttpResponse("No data to search...")
