@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 # import models here
 from .models import contact, ClientReview
+from courseapp.models import CourseSemester, SemesterSubject, SubjectUnit
+from accounts.models import Course
 
 from .forms import contact_form
 
@@ -39,5 +41,11 @@ def search_view(request):
         print("-------------------> ", search_keyword)
         if search_keyword is not None:
             print("-------------------> Searching in database outside index_view ..............")
+            courseList = Course.objects.all()
+            print(courseList)
+            semSubjectList = SemesterSubject.objects.all()
+            print(semSubjectList)
+            subUnitList = SubjectUnit.objects.all()
+            print(subUnitList)
         return HttpResponse("Search is under construction. #ecorpians")
     return HttpResponse("No data to search...")
