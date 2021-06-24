@@ -39,13 +39,19 @@ def search_view(request):
     if request.method == 'POST':
         search_keyword = request.POST['homeSearch']
         print("-------------------> ", search_keyword)
+        #
+        # Logic for searching in database's multiple table or an indexed table to fetch the related query
+        #
         if search_keyword is not None:
             print("-------------------> Searching in database outside index_view ..............")
+            #
+            # Logic for query and getting the exact match 
+            #
             courseList = Course.objects.all()
-            print(courseList)
+            #print(courseList)
             semSubjectList = SemesterSubject.objects.all()
-            print(semSubjectList)
+            #print(semSubjectList)
             subUnitList = SubjectUnit.objects.all()
-            print(subUnitList)
+            #print(subUnitList)
         return HttpResponse("Search is under construction. #ecorpians")
     return HttpResponse("No data to search...")
