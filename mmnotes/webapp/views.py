@@ -44,14 +44,6 @@ def search_view(request):
         #
         if search_keyword is not None:
             print("-------------------> Searching in database outside index_view ..............")
-            #
-            # Logic for query and getting the exact match 
-            #
-            courseList = Course.objects.all()
-            #print(courseList)
-            semSubjectList = SemesterSubject.objects.all()
-            #print(semSubjectList)
-            subUnitList = SubjectUnit.objects.all()
-            #print(subUnitList)
+            # LOGIC
         return HttpResponse("Search is under construction. #ecorpians")
     return HttpResponse("No data to search...")
