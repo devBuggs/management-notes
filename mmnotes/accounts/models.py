@@ -1,10 +1,18 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.conf import settings
 
+class SearchManager(models.Manager):
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(course__icontains=query))
+            qs = qs.filter(or_lookup).distinct()
+        return qs
 
-# Create your models here.
 
+# Create your models here
 #CustonSessionModel
 class LoggedInUser(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='logged_in_user', on_delete=models.CASCADE)
@@ -15,6 +23,8 @@ class LoggedInUser(models.Model):
 
 class Course(models.Model):
     course = models.CharField(max_length=50)
+
+    objects = SearchManager()
     
     def __str__(self):
         return self.course
@@ -36,3 +46,4 @@ class UserContact(models.Model):
 
     def __str__(self):
         return self.contact_number
+

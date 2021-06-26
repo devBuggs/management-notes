@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from itertools import chain
 
 # import models here
 from .models import contact, ClientReview
+
+# import models for searching
 from courseapp.models import CourseSemester, SemesterSubject, SubjectUnit
 from accounts.models import Course
 
+# import forms here
 from .forms import contact_form
 
 # Create your views here.
@@ -36,14 +40,36 @@ def contact_view(request):
     return render(request, 'web/contact.html', context)
 
 def search_view(request):
+    qs = []
     if request.method == 'POST':
-        search_keyword = request.POST['homeSearch']
-        print("-------------------> ", search_keyword)
-        #
-        # Logic for searching in database's multiple table or an indexed table to fetch the related query
-        #
-        if search_keyword is not None:
+        query = request.POST['homeSearch']
+        if query is not None:
             print("-------------------> Searching in database outside index_view ..............")
-            # LOGIC
-        return HttpResponse("Search is under construction. #ecorpians")
-    return HttpResponse("No data to search...")
+            course_results = Course.objects.search(query)
+            #semester_results = CourseSemester.objects.search(query, "semester_name")
+            subject_results = SemesterSubject.objects.search(query, "subject_name")
+            unit_results = SubjectUnit.objects.search(query, "unit_name")
+
+            # combine querysets
+            queryset_chain = chain(
+                course_results,
+                #semester_results,
+                subject_results,
+                unit_results
+            )
+            qs = sorted(queryset_chain, key=lambda instance: instance.pk, reverse=False)
+            total_result = len(qs)
+            print("----------------------------------------------------------------------------")
+            #print("Type : ", qs[0].course_name, "\nQuery Set : ", qs)
+            print("----------------------------------------------------------------------------")
+        context = {
+            "search_view" : True,
+            'qs' : qs,
+            'total_result' : total_result,
+        }
+        return render(request, 'web/contact.html', context)
+    context = {
+        "search_view" : True,
+        'qs' : qs,
+    }
+    return render(request, 'web/contact.html', context)
