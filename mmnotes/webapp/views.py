@@ -59,8 +59,12 @@ def search_view(request):
             )
             qs = sorted(queryset_chain, key=lambda instance: instance.pk, reverse=False)
             total_result = len(qs)
+            print(type(qs))
             print("----------------------------------------------------------------------------")
-            #print("Type : ", qs[0].course_name, "\nQuery Set : ", qs)
+            if type(qs) == list:
+                for ind in range(len(qs)):
+                    print("------------------> Level {ind}".format(ind=ind), qs[ind])
+                    print(type(qs[ind]))
             print("----------------------------------------------------------------------------")
         context = {
             "search_view" : True,

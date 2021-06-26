@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import Q
 
 from accounts.models import Course
+
+# Create your custom managers here
 '''
 class SearchManager(models.Manager):
     def search(self, query=None):
@@ -31,15 +33,8 @@ class SearchManager(models.Manager):
                 print("----------------------------------> Serching in Unit Model")
             else:
                 pass
-            '''
-            or_lookup = (
-                Q(semester_name__icontains=query) |
-                Q(subject_name__icontains=query) |
-                Q(unit_name__icontains=query)
-            )'''
             qs = qs.filter(or_lookup).distinct()
         return qs
-
 
 # Create your models here.
 class CourseSemester(models.Model):
