@@ -65,11 +65,13 @@ def search_view(request):
         context = {
             "search_view" : True,
             'qs' : qs,
+            'query' : query,
             'total_result' : total_result,
         }
         return render(request, 'web/contact.html', context)
     context = {
         "search_view" : True,
         'qs' : qs,
+        'total_result' : 0,
     }
     return render(request, 'web/contact.html', context)
