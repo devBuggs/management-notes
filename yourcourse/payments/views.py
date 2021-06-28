@@ -12,7 +12,7 @@ from accounts.models import UserContact, UserSubscription, Course, SubscriptionP
 
 # import views 
 from accounts.views import profile_view
-#from courseapp.views import dashboard_view
+from courseapp.views import dashboard_view
 
 # global variable
 UnlimitedAccess = SubscriptionPack.objects.get(subscription = "UnlimitedAccess")
@@ -168,7 +168,7 @@ def enrollmentCourse(request):
         if course:
             currentUserSubs = UserSubscription.objects.get(username = user.id)
             enrollmentCourse = Course.objects.get(id=course)
-            currentUserSubs.subject_details = enrollmentCourse
+            currentUserSubs.course = enrollmentCourse
             currentUserSubs.save()
             return redirect(dashboard_view)
     else:
