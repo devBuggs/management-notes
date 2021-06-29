@@ -7,7 +7,7 @@ class CourseSemesterAdmin(admin.ModelAdmin):
     list_filter = ['course_name']
 
 class SemesterSubjectAdmin(admin.ModelAdmin):
-    list_display = ('semester_code', 'name', 'code')
+    list_display = ('code', 'name', 'semester_code')
     list_filter = ['semester_code']
 
 class SubjectUnitAdmin(admin.ModelAdmin):
