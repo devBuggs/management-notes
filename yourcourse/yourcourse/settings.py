@@ -41,7 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'accounts.middlewares.OneSessionPerUserMiddleware',
+    'accounts.middlewares.OneSessionPerUserMiddleware',
 ]
 
 ROOT_URLCONF = 'yourcourse.urls'
