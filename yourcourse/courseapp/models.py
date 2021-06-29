@@ -37,9 +37,14 @@ class SemesterSubject(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_semester_code(self):
+        #print("----------------->>>>> ", self.semester_code.code)
+        return self.semester_code.code
         
     def get_absolute_url(self):
-        return reverse('sub', kwargs={'semesterID': str(self.semester_code), 'subjectID': str(self.code)})
+        print(str(self.semester_code))
+        return reverse('sub', kwargs={'semesterID': self.get_semester_code(), 'subjectID': str(self.code)})
 
 class SubjectUnit(models.Model):
     subject_code = models.ForeignKey(SemesterSubject, on_delete=models.CASCADE)
@@ -51,6 +56,14 @@ class SubjectUnit(models.Model):
     def __str__(self):
         return self.name
 
+    def get_semester_code(self):
+        #print("----------------->>>>> ", self.subject_code.semester_code.code)
+        return self.subject_code.semester_code.code
+
+    def get_subject_code(self):
+        #print("----------------->>>>> ", self.subject_code.code)
+        return self.subject_code.code
+
     def get_absolute_url(self):
-        return reverse('unit', kwargs={'subjectID': str(self.subject_code), 'unit_code': str(self.unit_number)})
+        return reverse('unitid', kwargs={'semesterID': self.get_semester_code(), 'subjectID': self.get_subject_code(), 'unit_code': str(self.unit_number)})
 

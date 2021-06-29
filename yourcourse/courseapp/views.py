@@ -181,9 +181,6 @@ def data_view(request, semesterID, subjectID, unit_code):
     semID = semesterID
     subCode = subjectID
     unitNo = unit_code
-    print("---------------------> ", semID)
-    print("---------------------> ", subCode)
-    print("---------------------> ", unitNo)
     currentUser = request.user
     subscription = UserSubscription.objects.get(username=currentUser.id)
     subscriptionType = subscription.subscription
