@@ -41,6 +41,12 @@ def contact_view(request):
     context = { 'form':form }
     return render(request, 'web/contact.html', context)
 
+def about_view(request):
+    context = {
+        
+    }
+    return render(request, 'web/about.html', context)
+
 class SearchView(ListView):
     template_name = 'web/search_result.html'
     count = 0
@@ -73,3 +79,13 @@ class SearchView(ListView):
             self.count = len(qs) # since qs is actually a list
             return qs
         return Course.objects.none() # just qs is actually a list
+
+def privacy_view(request):
+    form = contact_form()
+    context = { 'form':form }
+    return render(request, 'web/privacy.html', context)
+
+def tou_view(request):
+    form = contact_form()
+    context = { 'form':form }
+    return render(request, 'web/tou.html', context)
