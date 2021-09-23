@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'courseapp.apps.CourseappConfig',
     'payments.apps.PaymentsConfig',
     'interviewapp.apps.InterviewappConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
