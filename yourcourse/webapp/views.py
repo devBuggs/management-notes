@@ -42,9 +42,7 @@ def contact_view(request):
     return render(request, 'web/contact.html', context)
 
 def about_view(request):
-    context = {
-        
-    }
+    context = {}
     return render(request, 'web/about.html', context)
 
 class SearchView(ListView):

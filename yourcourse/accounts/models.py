@@ -32,7 +32,6 @@ class Course(models.Model):
         return reverse('userDashboard') # redirecting to user_dashboard
 
 class SubscriptionPack(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
     subscription = models.CharField(max_length=50)
 
     def __str__(self):
